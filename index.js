@@ -3,6 +3,7 @@ const app = express();
 const port = 3000;
 const mysql = require('mysql');
 
+// MySQL connection
 const connection = mysql.createConnection({
     host: "127.0.0.1",
     user: "root",
@@ -25,5 +26,21 @@ app.get('/selectall', (req, res) => {
 
     connection.end();
 });
+
+// Set the view engine to ejs
+app.set('view engine', 'ejs');
+
+app.get("/", (req, res) => {
+    const somePhrases = {
+        'one': 'This is the first phrase.',
+        'two': 'This is the second phrase.',
+        'title': 'Node JS Application One'
+    };
+
+    res.render("index", {
+       somePhrases: somePhrases
+   });
+});
+
 
 app.listen(port, (err) => err ? console.log(`Something is wrong ${err.message}`) : console.log(`Listening on port ${port}`));
