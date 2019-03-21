@@ -15,7 +15,6 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    console.log('MySQL connected...');
 });
 
 // Add department's data to the database
@@ -52,7 +51,7 @@ router.post('/update', urlencodedParser, (req, res) => {
 });
 
 router.get("/", (req, res) => {
-    const query = 'SELECT * from departments';
+    const query = 'SELECT * FROM departments';
 
     connection.query(query, (err, result) => {
         if (err) throw err.message;

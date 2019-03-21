@@ -1,0 +1,30 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" href="">
+    <title><%= title %></title>
+</head>
+<body>
+    <% workers.forEach(worker => { %>
+    <form method="POST" action="deleteWorker">
+        <p><%= worker.name%></p>
+        <p><%= worker.mail%></p>
+        <p><%= worker.salry%></p>
+        <p><%= worker.date%></p>
+        <button name="deleteWorker" value="<%= worker.id%>">Delete</button>
+    </form>
+
+    <form method="POST" action="updateWorker">
+        <input type="text" placeholder="Edit name" name="editName">
+        <input type="email" placeholder="Edit email" name="editEmail">
+        <input type="number" placeholder="Edit salary" name="editSalary">
+        <input type="date" placeholder="Edit date" name="editDate">
+
+        <button name="editWorker" value="<%= worker.id%>">Edit</button>
+    </form>
+    <% })%>
+
+    <a href="/add-worker">Add a worker</a>
+</body>
+</html>
