@@ -6,13 +6,17 @@
     <title><%= title %></title>
 </head>
 <body>
-
+<% departments.forEach(department => { %>
     <form method="POST" action="delete">
-        <% departments.forEach(department => { %>
         <p><%= department.name %></p>
-        <button name="deleteid" value="<%= department.id%>">Delete</button>
-        <% }) %>
+        <button name="deleteDep" value="<%= department.id%>">Delete</button>
     </form>
+    <form method="POST" action="update">
+        <input type="text" name="editName" placeholder="Edit name">
+        <button name="editDep" value="<%= department.id%>">Edit</button>
+    </form>
+<% }) %>
+
 
     <a href="/add" title="Add a department">Add a department</a>
 
