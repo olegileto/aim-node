@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <link type="text/css" href="">
-    <title><%= somePhrases.title %></title>
+    <title><%= title %></title>
 </head>
 <body>
-    <span><%= somePhrases.one%></span>
-    <span><%= somePhrases.two%></span>
+
+    <form method="POST" action="delete">
+        <% departments.forEach(department => { %>
+        <p><%= department.name %></p>
+        <button name="deleteid" value="<%= department.id%>">Delete</button>
+        <% }) %>
+    </form>
+
+    <a href="/add" title="Add a department">Add a department</a>
+
 </body>
 </html>
