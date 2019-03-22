@@ -8,7 +8,8 @@
 <body>
     <form method="POST" action="addWorker">
         <input type="text" placeholder="Enter name" name="workerName">
-        <input type="email" placeholder="Enter email" name="workerEmail">
+        <input type="text" placeholder="Enter email" name="workerEmail" class=<%= mailValidation ? 'error' : null%>>
+        <span><%= errorMessage %></span>
         <input type="number" placeholder="Enter salary" name="workerSalary">
         <input type="date" placeholder="Enter date" name="workerDate">
 
