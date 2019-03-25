@@ -7,22 +7,33 @@ const urlencodedParser = bodyParser.urlencoded({extended: false});
 
 // Add department's data to the database
 router.post('/', urlencodedParser, (req, res) => {
-    const query = 'INSERT INTO departments(name) VALUES (?)';
+    const queryInsert = 'INSERT INTO departments(name) VALUES (?)';
+    const queryName = 'SELECT name FROM departments';
     const names = req.body.inputName;
+    let errName = false;
 
     // Validation
-    if (req.body.inputName.length === 0) {
-        res.render('add', {
-            title: 'Add a department',
-            nameValidation: true,
-            errorMessage: "The field shouldn't be empty"
-        })
-    } else {
-        connection.query(query, names, (err) => {
-            if (err) throw err.message;
-            res.redirect("/");
+    connection.query(queryName, (err, result) => {
+        if (err) throw err;
+        result.forEach(res => {
+            if (req.body.inputName === res.name) {
+                errName = true;
+            }
         });
-    }
+
+        if (errName) {
+            res.render('add', {
+                title: 'Add a department',
+                nameValidation: true,
+                errorMessage: "Name should be unique"
+            })
+        } else {
+            connection.query(queryInsert, names, (err) => {
+                if (err) throw err.message;
+                res.redirect("/");
+            });
+        }
+    });
 });
 
 // Remove department's data from the database
@@ -38,10 +49,10 @@ router.post('/delete', urlencodedParser, (req, res) => {
 
 // Update department's data
 router.post('/update', urlencodedParser, (req, res) => {
-    const query = 'UPDATE departments SET departments.name = ? WHERE departments.id = ?';
+    const queryUpdate = 'UPDATE departments SET departments.name = ? WHERE departments.id = ?';
     const editButton = [req.body.editName, req.body.editDep];
 
-    connection.query(query, editButton, (err) => {
+    connection.query(queryUpdate, editButton, (err) => {
         if (err) throw err.message;
         res.redirect('/');
     })

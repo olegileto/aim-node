@@ -6,22 +6,34 @@ const connection = require('../connector/db');
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 
 router.post('/addWorker', urlencodedParser, (req, res) => {
-    const query = 'INSERT INTO workers(name, mail, salary, date) VALUES (?, ?, ?, ?)';
+    const queryInsert = 'INSERT INTO workers(name, mail, salary, date) VALUES (?, ?, ?, ?)';
+    const queryMail = 'SELECT mail FROM workers';
     const rows = [req.body.workerName, req.body.workerEmail, req.body.workerSalary, req.body.workerDate];
+    let errMail = false;
 
     // Validation
-    if (req.body.workerEmail.indexOf('@') < 0 || req.body.workerEmail.indexOf('.') < 0) {
-        res.render('add-worker', {
-            title: "Add a worker",
-            mailValidation: true,
-            errorMessage: 'Invalid email. example@gmail.com'
+    connection.query(queryMail, (err, result) => {
+        if (err) throw err;
+        result.forEach(res => {
+            if (req.body.workerEmail === res.mail) {
+                errMail = true;
+            }
         });
-    } else {
-        connection.query(query, rows, (err) => {
-            if (err) throw err;
-            res.redirect('/workers');
-        });
-    }
+
+        if (errMail) {
+            res.render('add-worker', {
+                title: "Add a worker",
+                mailValidation: true,
+                errorMessage: 'Mail should be unique'
+            });
+        } else {
+            connection.query(queryInsert, rows, (err) => {
+                if (err) throw err;
+                res.redirect('/workers');
+            });
+        }
+    })
+
 });
 
 router.post('/deleteWorker', urlencodedParser, (req, res) => {
@@ -43,6 +55,7 @@ router.post('/updateWorker', urlencodedParser, (req, res) => {
         res.redirect('/workers');
     });
 });
+
 router.get('/workers', (req, res) => {
     const query = 'SELECT * FROM workers';
 
